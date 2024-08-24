@@ -1,0 +1,36 @@
+name: continuous integration - pars-teb-crm
+
+concurrency:
+  group: pars-teb-crm
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["*"]
+    paths: ["apps/pars-teb-crm-server"]
+
+jobs:
+  continuous-integration:
+    name: continuous integration
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: setup node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: install dependencies
+        run: npm install
+        working-directory: apps/pars-teb-crm-server
+
+      - name: build
+        run: npm run build
+        working-directory: apps/pars-teb-crm-server
+
+      - name: test
+        run: npm test
+        working-directory: apps/pars-teb-crm-server
